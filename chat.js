@@ -5,20 +5,41 @@ exports.listen = function(server){
   io = socketio.listen(server);
 
   var MESSAGES = [];
+  var NICKNAMES = {};
 
   io.sockets.on( 'connection', function ( socket ) {
     socket.username = 'Anon';
+    NICKNAMES[socket.id] = socket.username;
+    allNames(socket);
 
     socket.on( 'message', function ( raw ) {
-      var txt = raw.data;
-      var reg = new RegExp("^\/nick ");
-      if ( txt.match(reg) ) {
-        socket.username = txt.replace(reg, "");
-      } else {
-        socket.broadcast.emit( "update", { data: raw.data, user: socket.username });
-        socket.emit( "update", { data: raw.data, user: socket.username });
-      }
+      socket.broadcast.emit( "newMessage", { data: raw.data, user: socket.username });
+      socket.emit( "newMessage", { data: raw.data, user: socket.username });
     });
+
+    socket.on( 'newName', function ( raw ) {
+      socket.username = raw.data;
+      NICKNAMES[socket.id] = socket.username;
+      socket.broadcast.emit( "updateNickname", { id: socket.id, user: socket.username });
+      socket.emit( "updateNickname", { id: socket.id, user: socket.username });
+      allNames(socket);
+    });
+
+    socket.on('getAllNicknames', function() {
+      allNames(socket);
+    });
+
+    socket.on('disconnect', function() {
+      delete NICKNAMES[socket.id];
+      allNames(socket);
+    });
+
   });
 
+  var allNames = function(socket) {
+    socket.broadcast.emit("names", { names: NICKNAMES });
+    socket.emit("names", { names: NICKNAMES });
+  };
+
 }
+

@@ -17,12 +17,16 @@
       <button id="submit">Send Message</button>
     </div>
 
+    <div id="all-users" style="border: 1px solid red">
+
+    </div>
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./javascripts/chat.js"></script>
     <script src="./javascripts/chat_ui.js"></script>
     <script>
-      var ui = new Room.ChatUI();
+      $(function () { var ui = new Room.ChatUI(); });
     </script>
 
   </body>
