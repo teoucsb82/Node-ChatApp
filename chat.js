@@ -7,14 +7,17 @@ exports.listen = function(server){
   var MESSAGES = [];
 
   io.sockets.on( 'connection', function ( socket ) {
-    // SOCKETS.push( socket );
+    socket.username = 'Anon';
+
     socket.on( 'message', function ( raw ) {
-
-      //this gets broadcast to all but us
-      socket.broadcast.emit( "update", { data: raw.data });
-
-      //this only shows for us
-      socket.emit( "update", { data: raw.data });
+      var txt = raw.data;
+      var reg = new RegExp("^\/nick ");
+      if ( txt.match(reg) ) {
+        socket.username = txt.replace(reg, "");
+      } else {
+        socket.broadcast.emit( "update", { data: raw.data, user: socket.username });
+        socket.emit( "update", { data: raw.data, user: socket.username });
+      }
     });
   });
 
