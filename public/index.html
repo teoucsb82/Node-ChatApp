@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-
+    <title>Chat App</title>
   </head>
   <body>
-    <h1>hi</h1>
+    <h1>Chat App</h1>
+      <hr>
 
-    <script src="/socket.io/socket.io.js"></script>
+    <div id="chat">
+      <h3>Compose New Message</h3>
+      <ul id="messages">
+
+      </ul>
+      <p><textarea id="compose" style="width: 600px; height: 100px"></textarea></p>
+
+      <button id="submit">Send Message</button>
+    </div>
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./javascripts/chat.js"></script>
+    <script src="./javascripts/chat_ui.js"></script>
+    <script>
+      var ui = new Room.ChatUI();
+    </script>
+
   </body>
 </html>
