@@ -1,18 +1,27 @@
 (function(root) {
-  var Room = root.Room = (root.Room || {});
+  var ChatApp = root.ChatApp = (root.ChatApp || {});
 
-  Room.Chat = function() {
-    this.room = io.connect();
+  ChatApp.ChatSocket = function() {
+    this.chat = io.connect();
   };
 
-  Room.Chat.prototype = {
+  ChatApp.ChatSocket.prototype = {
     sendMessage: function(message) {
-      this.room.emit( "message", { data: message } )
+      this.chat.emit( "message", { data: message } )
     },
 
     updateUsername: function(user) {
-      this.room.emit( "newName", { data: user } )
+      this.chat.emit( "newName", { data: user } )
+    },
+
+    changeRoom: function(data) {
+      this.chat.emit("updateRoom", { room: data } );
+    },
+
+    changeColor: function(data) {
+      this.chat.emit( "newColor", { color: data } );
     }
+
   };
 
 })(this);
